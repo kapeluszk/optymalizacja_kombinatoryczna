@@ -28,7 +28,7 @@ func parseToStruct(inputMatrix [][]int) []city {
 }
 
 func main() {
-	filename := flag.String("file", "tsp-metaheuristics-solution/city.txt", "podaj ścieżkę do pliku txt z miastami")
+	filename := flag.String("file", "optymalizacja_kombinatoryczna/city.txt", "podaj ścieżkę do pliku txt z miastami")
 	flag.Parse()
 
 	file, err := os.Open(*filename)
