@@ -9,6 +9,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type city struct {
@@ -61,12 +62,15 @@ func nearestNeighbor(cities []city) []city {
 }
 
 func readCitiesFromFile(filename string) ([]city, error) {
+
+	//otwieramy plik
 	file, err := os.Open(filename)
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
+	//otwieramy skaner i tworzymy tablicę miast
 	scanner := bufio.NewScanner(file)
 	scanner.Scan()
 	var cities []city
@@ -110,6 +114,7 @@ func readCitiesFromFile(filename string) ([]city, error) {
 	return cities, nil
 }
 
+// to jest niepotrzebne ale może się przydać kiedyś
 func parseToStruct(inputMatrix [][]int) []city {
 	ret := make([]city, len(inputMatrix))
 	for i, row := range inputMatrix {
@@ -126,11 +131,16 @@ func main() {
 	filename := flag.String("file", "optymalizacja_kombinatoryczna/city.txt", "podaj ścieżkę do pliku txt z miastami")
 	flag.Parse()
 
+	start := time.Now()
 	xyz, err := readCitiesFromFile(*filename)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+
 	fmt.Println(nearestNeighbor(xyz))
+
+	elapsed := time.Since(start)
+	println("czas wykonania algorytmu w sekundach to: ", elapsed.Seconds())
 
 }
