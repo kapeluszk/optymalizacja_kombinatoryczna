@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
+	"log"
 	"math"
 	"math/rand"
 	"os"
@@ -127,20 +128,66 @@ func parseToStruct(inputMatrix [][]int) []city {
 	return ret
 }
 
+func generateTxtInstance(citiesAmount int) (string, error) {
+	var newFileName string
+	fmt.Println("Podaj nazwę nowego pliku")
+	fmt.Scanln(&newFileName)
+
+	fileNew, err := os.Create(newFileName)
+	if err != nil {
+		log.Fatal()
+	}
+	defer fileNew.Close()
+
+	writer := bufio.NewWriter(fileNew)
+
+	fmt.Fprintf(fileNew, "%d\n", citiesAmount)
+	writer.Flush()
+
+	for i := 0; i < citiesAmount; i++ {
+		x := rand.Intn(2000)
+		y := rand.Intn(2000)
+		fmt.Fprintf(writer, "%d %d %d\n", i+1, x, y)
+		writer.Flush()
+	}
+	return newFileName, err
+}
+
 func main() {
 	filename := flag.String("file", "optymalizacja_kombinatoryczna/city.txt", "podaj ścieżkę do pliku txt z miastami")
 	flag.Parse()
 
-	start := time.Now()
-	xyz, err := readCitiesFromFile(*filename)
-	if err != nil {
-		fmt.Println(err)
-		return
+	var choose int
+	fmt.Println("1 - wygeneruj plik, 2 - użyj pliku podanego we fladze")
+	fmt.Scanln(&choose)
+
+	switch choose {
+	case 1:
+		var amount int
+		fmt.Println("Podaj ile miast ma być wygenerowane")
+		fmt.Scanln(&amount)
+		file, err := generateTxtInstance(amount)
+		if err != nil {
+			log.Fatal()
+		}
+		fmt.Printf("utworzono plik %s", file)
+
+	case 2:
+		start := time.Now()
+		xyz, err := readCitiesFromFile(*filename)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		fmt.Println(nearestNeighbor(xyz))
+
+		elapsed := time.Since(start)
+		println("czas wykonania algorytmu w sekundach to: ", elapsed.Seconds())
+
+	default:
+		fmt.Println("wprowadzono niepoprawną liczbę")
+		break
 	}
-
-	fmt.Println(nearestNeighbor(xyz))
-
-	elapsed := time.Since(start)
-	println("czas wykonania algorytmu w sekundach to: ", elapsed.Seconds())
 
 }
