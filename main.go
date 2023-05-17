@@ -20,7 +20,7 @@ func main() {
 		var amount int
 		fmt.Println("Podaj ile miast ma być wygenerowane")
 		fmt.Scanln(&amount)
-		file, err := GenerateTxtInstance(amount)
+		file, err := base.GenerateTxtInstance(amount)
 		if err != nil {
 			log.Fatal()
 		}
@@ -28,19 +28,19 @@ func main() {
 
 	case 2:
 		start := time.Now()
-		xyz, err := ReadCitiesFromFile(*filename)
+		xyz, err := base.ReadCitiesFromFile(*filename)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
 
-		fmt.Println(NearestNeighbor(xyz))
+		fmt.Println(base.NearestNeighbor(xyz))
 
 		elapsed := time.Since(start)
 		println("czas wykonania algorytmu w sekundach to: ", elapsed.Seconds())
 
 	case 3:
-		xyz, err := ReadCitiesFromFile(*filename)
+		xyz, err := base.ReadCitiesFromFile(*filename)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -54,9 +54,9 @@ func main() {
 		var pop int
 		fmt.Scanln(&pop)
 
-		greedy := NearestNeighbor(xyz)
+		greedy := base.NearestNeighbor(xyz)
 
-		answer, bestRoute := runGeneticAlgorithm(greedy, generation, pop)
+		answer, bestRoute := base.runGeneticAlgorithm(greedy, generation, pop)
 
 		fmt.Println(answer)
 		fmt.Println(bestRoute)
